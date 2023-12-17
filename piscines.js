@@ -8,7 +8,18 @@ $(document).ready(function(){
 	$('.btnradiohour').click(function(){
 		updateList();
 	});
+
+	update();
 	
+});
+
+$(window).focus(function() {
+	
+	update();
+	
+});
+
+function update() {
 	const currentDayNumber = new Date().getDate();
 	$('.btnradiodaynumber'+currentDayNumber).click();
 	
@@ -18,8 +29,8 @@ $(document).ready(function(){
 		hourText = '0';
 	hourText += currentHour;
 	$('#btnradiohour'+hourText).click();
-	
-});
+
+}
 
 
 function updateList() {
