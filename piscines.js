@@ -20,16 +20,21 @@ $(window).focus(function() {
 });
 
 function update() {
-	const currentDayNumber = new Date().getDate();
-	$('.btnradiodaynumber'+currentDayNumber).click();
+	let dayclicked = $('input[name=btnradioday]:checked');
+	if (!dayclicked.length) {
+		const currentDayNumber = new Date().getDate();
+		$('.btnradiodaynumber'+currentDayNumber).click();
+	}
 	
-	const currentHour = new Date().getHours();
-	let hourText = '';
-	if (currentHour < 10)
-		hourText = '0';
-	hourText += currentHour;
-	$('#btnradiohour'+hourText).click();
-
+	let hourclicked = $('input[name=btnradiohour]:checked');
+	if (!hourclicked.length) {
+		const currentHour = new Date().getHours();
+		let hourText = '';
+		if (currentHour < 10)
+			hourText = '0';
+		hourText += currentHour;
+		$('#btnradiohour'+hourText).click();
+	}
 }
 
 
