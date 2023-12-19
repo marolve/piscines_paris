@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Piscines de Paris</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+		<link rel="stylesheet" href="piscines.css" />
   </head>
   <body>
     <nav class="navbar " style="background-color: #e3f2fd;">
@@ -18,8 +21,22 @@
 		
 		<div class="container btn-group btn-group-sm flex-wrap my-1 d-flex justify-content-center" role="group" aria-label="Basic radio toggle button group">%hours%
 		</div>
-		
-		<div class="container d-flex justify-content-center">
+
+
+		<div class="container d-flex">
+			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+				<input type="radio" class="btn-check btnradiomain" name="btnradiomain" id="btnradiomainlist" autocomplete="off" checked>
+				<label class="btn btn-outline-primary" for="btnradiomainlist">Liste</label>
+				<input type="radio" class="btn-check btnradiomain" name="btnradiomain" id="btnradiomainmap" autocomplete="off">
+				<label class="btn btn-outline-primary" for="btnradiomainmap">Carte</label>
+			</div>
+		</div>
+
+		<div class="container d-flex justify-content-center" id="mapcontainer">
+			<div id='map'></div>
+		</div>
+
+		<div class="container d-flex justify-content-center" id="tablecontainer">
 			<table class="table">
 				<thead>
 					<tr>
@@ -32,7 +49,6 @@
 				</tbody>
 			</table>
 		</div>
-		
 		
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 		<script src="jquery-3.7.1.min.js"></script>
