@@ -151,6 +151,9 @@ function loadHtml(callback) {
 
 // Fill Html with piscines Data
 function fillHtml(html, data) {
+	
+	html = html.replace('%datecreated%', new Date().toISOString());
+	
 	if (data.dates.length < 6) return '';
 	let day = '\n			<input type="radio" class="btn-check btnradioday btnradiodaynumber%daynumber%" name="btnradioday" id="btnradioday%i%" autocomplete="off" data-day-number="%daynumber%">';
 	day += '\n			<label class="btn btn-outline-primary" for="btnradioday%i%">%label%</label>';
@@ -218,12 +221,12 @@ var server = http.createServer((req, res) => {
 						res.write(fillHtml(html, data));
 						res.end();
 					} else {
-						res.end(err.message());
+						res.end(err.message);
 					}
 				});
 			}
 			else {
-				res.end(err.message());
+				res.end(err.message);
 			}
 		});
 	}
