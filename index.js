@@ -179,7 +179,7 @@ function fillHtml(html, data) {
 	let piscineRows = '';
 	// schedule labels : 'data-schedule-text1="07:00 à 08:30<br/>11:30 à 13:30" 
 	// schedule datas : data-schedule-data1="420-510;690-810"
-	let row = '\n					<tr data-name="%name%" %schedulelabels% %scheduledatas%> <td>%arr%</td> <td><a href="%link%">%name%</a></td> <td class="schedulecell"></td> </tr>';
+	let row = '\n					<tr data-name="%name%" data-link="%link%" %schedulelabels% %scheduledatas%> <td>%arr%</td> <td><a href="%link%">%name%</a></td> <td class="schedulecell"></td> </tr>';
 	for (const piscine of data.piscines) {
 		if (piscine.schedules.length > 7) {
 			let scheduleLabels = '';
@@ -198,7 +198,7 @@ function fillHtml(html, data) {
 				scheduleLabels += ' data-schedule-text' + (i + 1) + '="' + scheduleLabel + '"';
 				scheduleDatas += ' data-schedule-data' + (i + 1) + '="' + scheduleData + '"';
 			}
-			piscineRows += row.replace('%arr%', piscine.arrondissement).replace(/%name%/g, piscine.name).replace('%link%', piscine.link).replace('%schedulelabels%', scheduleLabels).replace('%scheduledatas%', scheduleDatas);
+			piscineRows += row.replace('%arr%', piscine.arrondissement).replace(/%name%/g, piscine.name).replace(/%link%/g, piscine.link).replace('%schedulelabels%', scheduleLabels).replace('%scheduledatas%', scheduleDatas);
 		}
 	};
 	html = html.replace('%rows%', piscineRows);

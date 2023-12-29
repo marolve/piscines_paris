@@ -102,9 +102,10 @@ function removeAllMarkers() {
 	markers = [];
 }
 
-function addMarker(lat, lon, text) {
+function addMarker(lat, lon, text, openLevel) {
 	marker = L.marker([lat, lon]).addTo(map);
 	marker.bindPopup(text);
+	marker._icon.classList.add("openlevel" + openLevel);
 	markers.push(marker);
 	return marker;
 }
@@ -174,6 +175,7 @@ function updateList() {
 	$('tbody tr').each(function() {
 		
 		let piscineName = $(this).attr('data-name');
+		let piscineLink = $(this).attr('data-link');
 		let scheduleData = $(this).attr('data-schedule-data' + dayid);
 		let scheduleTextComplete = $(this).attr('data-schedule-text' + dayid);
 		let scheduleText = '';
@@ -182,7 +184,7 @@ function updateList() {
 		let timestart = hour * 60;
 		let timeend = timestart + 59;
 		let start = 0;
-		let scheduleOK = 0;
+		let openLevel = 0;
 		while (start != -1) {
 			let schedule = '';
 			let sep = scheduleData.indexOf(';', start);
@@ -203,12 +205,12 @@ function updateList() {
 					let timeendok = (timeend >= low && timeend <= high);
 					let addText = false;
 					if (timestartok && timeendok) {
-						scheduleOK = 1;
+						openLevel = 1;
 						addText = true;
 					}
-					if (scheduleOK == 0) {
+					if (openLevel == 0) {
 						if ((timestartok && !timeendok) || (!timestartok && timeendok)) {
-							scheduleOK = 2;
+							openLevel = 2;
 							addText = true;
 						}
 					}
@@ -226,19 +228,19 @@ function updateList() {
 		}
 		$(this).find('.schedulecell').html(scheduleText);
 		$(this).removeClass('table-info');
-		if (scheduleOK == 2)
+		if (openLevel == 2)
 			$(this).css('font-style', 'italic');
-		if (scheduleOK == 1) {
+		if (openLevel == 1) {
 			$(this).css('font-style', 'normal');
 			$(this).addClass('table-info');
 		}
-		if (scheduleOK == 0) {
+		if (openLevel == 0) {
 			$(this).hide();
 		} else {
 			let piscine = findPiscine(piscineName);
 			if (piscine != null) {
-				let piscineText = '<h6>' + piscine.name + '</h6><br/>' + scheduleTextComplete;
-				addMarker(piscine.x, piscine.y, piscineText);
+				let piscineText = '<h6><a href="' + piscineLink + '">' + piscine.name + '</a></h6><br/>' + scheduleTextComplete;
+				addMarker(piscine.x, piscine.y, piscineText, openLevel);
 			}
 			$(this).show();
 		}

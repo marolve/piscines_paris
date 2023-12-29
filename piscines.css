@@ -18,3 +18,11 @@
 		font-size: 1em;
 	}
 }	
+
+img.openlevel1 { 
+	filter: brightness(1.3); 
+}
+
+img.openlevel2 { 
+	filter: grayscale(0.5) brightness(1.3) hue-rotate(180deg);
+}
