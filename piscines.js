@@ -5,10 +5,6 @@ var markers = [];
 $(window).on( 'load', function() {
 	
 	initMap();
-	
-});
-
-$(document).ready(function(){
 
 	$('.btnradiomain').click(function(){
 		updateNav();
@@ -21,8 +17,13 @@ $(document).ready(function(){
 	$('.btnradiohour').click(function(){
 		updateList();
 	});
+	
+});
 
+$(window).on( 'pageshow', function() {
+	
 	update();
+	
 });
 
 
@@ -73,7 +74,7 @@ var piscines = [
 function initMap() {
 	var lat = 48.8621;
 	var lon = 2.3397;
-	map = L.map('map').setView([lat, lon], 13);
+	map = L.map('map').setView([lat, lon], 12);
 
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 19,
@@ -112,22 +113,33 @@ function addMarker(lat, lon, text, openLevel) {
 
 
 function update() {
+	
 	updateNav();
 
 	let dayclicked = $('input[name=btnradioday]:checked');
 	if (!dayclicked.length) {
-		const currentDayNumber = new Date().getDate();
-		$('.btnradiodaynumber'+currentDayNumber).click();
+		const dayidPrevious = $('#btngroupday').attr('data-dayselected');
+		if (dayidPrevious) {
+			$('#btnradioday'+dayidPrevious).click();
+		} else {
+			const currentDayNumber = new Date().getDate();
+			$('.btnradiodaynumber'+currentDayNumber).click();
+		}
 	}
 	
 	let hourclicked = $('input[name=btnradiohour]:checked');
 	if (!hourclicked.length) {
-		const currentHour = new Date().getHours();
-		let hourText = '';
-		if (currentHour < 10)
-			hourText = '0';
-		hourText += currentHour;
-		$('#btnradiohour'+hourText).click();
+		const houridPrevious = $('#btngrouphour').attr('data-hourselected');
+		if (houridPrevious) {
+			$('#btnradiohour'+houridPrevious).click();
+		} else {
+			const currentHour = new Date().getHours();
+			let hourText = '';
+			if (currentHour < 10)
+				hourText = '0';
+			hourText += currentHour;
+			$('#btnradiohour'+hourText).click();
+		}
 	}
 	
 }
@@ -169,6 +181,8 @@ function updateList() {
 	}
 	
 	if (dayid.length == 0 || hourid.length == 0) return;
+	$('#btngroupday').attr('data-dayselected', dayid);
+	$('#btngrouphour').attr('data-hourselected', hourid);
 
 	let hour = parseInt(hourid);
 	
