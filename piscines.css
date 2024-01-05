@@ -19,6 +19,10 @@
 	}
 }	
 
+img.openlevel0 { 
+	filter: grayscale(1) brightness(1.8);
+}
+
 img.openlevel1 { 
 	filter: brightness(1.3); 
 }

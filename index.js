@@ -184,7 +184,7 @@ function fillHtml(html, data) {
 		if (piscine.schedules.length > 7) {
 			let scheduleLabels = '';
 			let scheduleDatas = '';
-			for (let i = 0; i < 7; i++) {
+			for (let i = 0; i < 10; i++) {
 				let scheduleLabel = '';
 				let scheduleData = '';
 				for (const schedule of piscine.schedules[i]) {

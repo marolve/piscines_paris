@@ -169,7 +169,7 @@ function updateList() {
 	if (!dayclicked.length) return;
 	let dayidclicked = dayclicked.attr('id');
 	if (dayidclicked.indexOf('btnradioday') == 0) {
-		dayid = dayidclicked.substring(11, 12);
+		dayid = dayidclicked.substring(11);
 	}
 	
 	let hourid = '';
@@ -177,7 +177,7 @@ function updateList() {
 	if (!hourclicked.length) return;
 	let houridclicked = hourclicked.attr('id');
 	if (houridclicked.indexOf('btnradiohour') == 0) {
-		hourid = houridclicked.substring(12, 14);
+		hourid = houridclicked.substring(12);
 	}
 	
 	if (dayid.length == 0 || hourid.length == 0) return;
@@ -198,7 +198,7 @@ function updateList() {
 		let timestart = hour * 60;
 		let timeend = timestart + 59;
 		let start = 0;
-		let openLevel = 0;
+		let openLevel = -1;
 		while (start != -1) {
 			let schedule = '';
 			let sep = scheduleData.indexOf(';', start);
@@ -211,6 +211,8 @@ function updateList() {
 				start = sep + 1;
 			}
 			if (schedule.length > 0) {
+				if (openLevel == -1)
+					openLevel = 0;
 				let sep = schedule.indexOf('-');
 				if (sep != -1) {
 					let low = parseInt(schedule.substring(0, sep));
@@ -248,15 +250,17 @@ function updateList() {
 			$(this).css('font-style', 'normal');
 			$(this).addClass('table-info');
 		}
-		if (openLevel == 0) {
+		if (openLevel <= 0) {
 			$(this).hide();
 		} else {
+			$(this).show();
+		}
+		if (openLevel >= 0) {
 			let piscine = findPiscine(piscineName);
 			if (piscine != null) {
 				let piscineText = '<h6><a href="' + piscineLink + '">' + piscine.name + '</a></h6><br/>' + scheduleTextComplete;
 				addMarker(piscine.x, piscine.y, piscineText, openLevel);
 			}
-			$(this).show();
 		}
 	});
 }
