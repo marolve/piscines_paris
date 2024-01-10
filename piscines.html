@@ -14,6 +14,11 @@
     <nav class="navbar " style="background-color: #e3f2fd;">
       <div class="container d-flex">
         <span class="navbar-brand mb-0 h1">Piscines de Paris</span>
+				<ul class="navbar-nav d-flex flex-row me-1">
+						<li class="nav-item me-3 me-lg-0">
+								<a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fas"><img src="info.svg" alt="informations"></img></i></a>
+						</li>
+				</ul>
       </div>
     </nav>
     
@@ -49,6 +54,42 @@
         </tbody>
       </table>
     </div>
+		
+		<!-- Modal -->
+		<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="infoModalLabel">Informations</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="form-check">
+							<p>Cette page récupère la liste des horaires des piscines sur le <a href="https://www.paris.fr/lieux/piscines/tous-les-horaires">site de la mairie de Paris</a>.</p>
+							<p>Légende de la carte :</p>
+							<table class="mb-2"><tbody>
+							<tr>
+							  <td><img class="openlevel1 me-2" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
+								<td>Piscine ouverte à l'horaire sélectionné</td>
+							</tr>
+							<tr>
+							  <td><img class="openlevel2" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
+								<td>Piscine partiellement ouverte à l'horaire sélectionné</td>
+							</tr>
+							<tr>
+							  <td><img class="openlevel0" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
+								<td>Piscine fermée à l'horaire sélectionné</td>
+							</tr>
+							</tbody></table>
+							<p>Remarque: les piscines n'ayant aucun horaire d'ouverture le jour sélectionné ne sont pas affichées.</p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+					</div>
+				</div>
+			</div>
+		</div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="jquery-3.7.1.min.js"></script>
