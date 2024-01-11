@@ -5,11 +5,12 @@ var markers = [];
 $(window).on( 'load', function() {
 	
 	initMap();
-
-	$('.btnradiomain').click(function(){
+	
+	$('.nav-maplist').click(function() {
+		event.preventDefault();
 		updateNav();
 	});
-	
+
 	$('.btnradioday').click(function(){
 		updateList();
 	});
@@ -141,24 +142,20 @@ function update() {
 			$('#btnradiohour'+hourText).click();
 		}
 	}
-	
 }
 
 function updateNav() {
-	let mainclicked = $('input[name=btnradiomain]:checked');
-	if (mainclicked.length != 0) {
-		let showMap = (mainclicked.attr('id').indexOf('btnradiomainmap') == 0);
-		if (showMap) {
-			$('#tablecontainer').addClass('d-none');	// hide
-			$('#mapcontainer').removeClass('d-none');	// show
-			map.invalidateSize();
-		} else {
-			$('#mapcontainer').addClass('d-none');	// hide
-			$('#tablecontainer').removeClass('d-none');	// show
-		}
+	let clicked = $('.nav-tabs button.active');
+	let showMap = clicked.attr('id') == 'map-tab';
+	if (showMap) {
+		$('#tablecontainer').addClass('d-none');	// hide
+		$('#mapcontainer').removeClass('d-none');	// show
+		map.invalidateSize();
+	} else {
+		$('#mapcontainer').addClass('d-none');	// hide
+		$('#tablecontainer').removeClass('d-none');	// show
 	}
 }
-
 
 function updateList() {
 	
@@ -186,7 +183,7 @@ function updateList() {
 
 	let hour = parseInt(hourid);
 	
-	$('tbody tr').each(function() {
+	$('#tablecontainer tbody tr').each(function() {
 		
 		let piscineName = $(this).attr('data-name');
 		let piscineLink = $(this).attr('data-link');

@@ -28,32 +28,35 @@
     <div class="container btn-group btn-group-sm flex-wrap my-1 d-flex justify-content-center" role="group" aria-label="Basic radio toggle button group" id="btngrouphour">%hours%
     </div>
 
-    <div class="container d-flex">
-      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check btnradiomain" name="btnradiomain" id="btnradiomainmap" autocomplete="off" checked>
-        <label class="btn btn-outline-primary" for="btnradiomainmap">Carte</label>
-        <input type="radio" class="btn-check btnradiomain" name="btnradiomain" id="btnradiomainlist" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnradiomainlist">Liste</label>
-      </div>
-    </div>
+		<div class="container">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+			    <button class="nav-link active nav-maplist" id="map-tab" data-bs-toggle="tab" data-bs-target="#mapcontainer" type="button" role="tab" aria-controls="map-tab-pane" aria-selected="true">Carte</button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link nav-maplist" id="list-tab" data-bs-toggle="tab" data-bs-target="#tablecontainer" type="button" role="tab" aria-controls="list-tab-pane" aria-selected="true">Liste</button>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane container d-flex justify-content-center mt-2 show active" id="mapcontainer" role="tabpanel" aria-labelledby="map-tab" tabindex="0">
+					<div id='map'></div>
+				</div>
 
-    <div class="container d-flex justify-content-center mt-2" id="mapcontainer">
-      <div id='map'></div>
-    </div>
-
-    <div class="container d-flex justify-content-center" id="tablecontainer">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Arrt</th>
-            <th scope="col">Piscine</th>
-            <th scope="col">Horaires</th>
-          </tr>
-        </thead>
-        <tbody>%rows%
-        </tbody>
-      </table>
-    </div>
+				<div class="tab-pane container d-flex justify-content-center" id="tablecontainer" role="tabpanel" aria-labelledby="list-tab" tabindex="0">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Arrt</th>
+								<th scope="col">Piscine</th>
+								<th scope="col">Horaires</th>
+							</tr>
+						</thead>
+						<tbody>%rows%
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 		
 		<!-- Modal -->
 		<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
@@ -67,20 +70,33 @@
 						<div class="form-check">
 							<p>Cette page récupère la liste des horaires des piscines sur le <a href="https://www.paris.fr/lieux/piscines/tous-les-horaires">site de la mairie de Paris</a>.</p>
 							<p>Légende de la carte :</p>
-							<table class="mb-2"><tbody>
-							<tr>
-							  <td><img class="openlevel1 me-2" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
-								<td>Piscine ouverte à l'horaire sélectionné</td>
-							</tr>
-							<tr>
-							  <td><img class="openlevel2" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
-								<td>Piscine partiellement ouverte à l'horaire sélectionné</td>
-							</tr>
-							<tr>
-							  <td><img class="openlevel0" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
-								<td>Piscine fermée à l'horaire sélectionné</td>
-							</tr>
-							</tbody></table>
+							<div>
+								<table class="ms-2 mb-3"><tbody>
+								<tr>
+									<td><img class="openlevel1 me-2" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
+									<td>Piscine ouverte à l'horaire sélectionné</td>
+								</tr>
+								<tr>
+									<td><img class="openlevel2" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
+									<td>Piscine partiellement ouverte à l'horaire sélectionné</td>
+								</tr>
+								<tr>
+									<td><img class="openlevel0" src="https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png"></td>
+									<td>Piscine fermée à l'horaire sélectionné</td>
+								</tr>
+								</tbody></table>
+							</div>
+							<p>Liste :</p>
+							<div>
+								<table class="table ms-2 mb-4"><tbody>
+								<tr class="table-info">
+									<td>Piscine ouverte à l'horaire sélectionné</td>
+								</tr>
+								<tr>
+									<td>Piscine partiellement ouverte à l'horaire sélectionné</td>
+								</tr>
+								</tbody></table>
+							</div>
 							<p>Remarque: les piscines n'ayant aucun horaire d'ouverture le jour sélectionné ne sont pas affichées.</p>
 						</div>
 					</div>
