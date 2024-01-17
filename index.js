@@ -153,6 +153,7 @@ function loadHtml(callback) {
 function fillHtml(html, data) {
 	
 	html = html.replace('%datecreated%', new Date().toISOString());
+	html = html.replace('%datelabel%', new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'}));
 	
 	if (data.dates.length < 6) return '';
 	let day = '\n			<input type="radio" class="btn-check btnradioday btnradiodaynumber%daynumber%" name="btnradioday" id="btnradioday%i%" autocomplete="off" data-day-number="%daynumber%">';
