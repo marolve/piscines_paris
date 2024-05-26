@@ -43,7 +43,7 @@ var piscines = [
 { name: 'Piscine de la Cour des Lions', x: 48.8606030, y: 2.3703147 },
 { name: 'Piscine Roger Le Gall', x: 48.84164 , y: 2.41259 },
 { name: 'Piscine Jean Boiteux', x: 48.84216 , y: 2.38926 },
-{ name: 'Piscine de la Butte aux Cailles', x: 48.82735, y: 2.35237 },
+{ name: 'Piscine de la Butte aux cailles', x: 48.82735, y: 2.35237 },
 { name: 'Piscine Château des Rentiers', x: 48.83068, y: 2.36307 },
 { name: 'Piscine Joséphine-Baker', x: 48.8361, y: 2.37601 },
 { name: 'Piscine Dunois', x: 48.83305, y: 2.36683 },
