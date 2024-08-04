@@ -49,24 +49,24 @@ function analyzeParisfr(html) {
 	let tableheaders = $(table).find('thead th');
 
 	// extract header dates
-	var dates = [];
-	let yesterday = new Date();
-	yesterday.setDate(yesterday.getDate() - 1);
+	var days = [];
 	tableheaders.each((i, tableheader) => {
 		if (i > 0) {
-			let text = $(tableheader).html();			// example:"   mer. 06/12  "
+			let text = $(tableheader).html().trim();			// example:"   mer. 06/12  "
 			let pos = text.indexOf('/');
 			if (pos != -1 && pos > 1 && text.length > (pos + 2)) {
-				let day = parseInt(text.substring(pos - 2, pos), 10);
-				let month = parseInt(text.substring(pos + 1, pos + 3), 10);
-				if (day > 0 && day < 32 && month > 0 && month < 13) {
-					let date = new Date(yesterday.getFullYear(), month - 1, day);
-					if (date < yesterday) { // in case of a new year
-						date = new Date(yesterday.getFullYear() + 1, month - 1, day);
+				let posDot = text.indexOf('.');
+				if (posDot == 3) {
+					let dayName = text.substring(0, posDot);
+					let day = parseInt(text.substring(pos - 2, pos), 10);
+					if (day > 0 && day < 32) {
+						days.push( { 'number' : day, 'name' : dayName } );
+					} else {
+						console.log('Error :Invalid header date value while parsing html : ' + text);
+						return null;
 					}
-					dates.push(date);
 				} else {
-					console.log('Error :Invalid header date while parsing html : ' + text);
+					console.log('Error :Invalid header date name while parsing html : ' + text);
 					return null;
 				}
 			} else {
@@ -133,7 +133,7 @@ function analyzeParisfr(html) {
 	});
 	
 	return {
-		dates: dates,
+		days: days,
 		piscines: piscines
 	};
 }
@@ -155,13 +155,13 @@ function fillHtml(html, data) {
 	html = html.replace('%datecreated%', new Date().toISOString());
 	html = html.replace('%datelabel%', new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'}));
 	
-	if (data.dates.length < 6) return '';
+	if (data.days.length < 6) return '';
 	let day = '\n			<input type="radio" class="btn-check btnradioday btnradiodaynumber%daynumber%" name="btnradioday" id="btnradioday%i%" autocomplete="off" data-day-number="%daynumber%">';
 	day += '\n			<label class="btn btn-outline-primary" for="btnradioday%i%">%label%</label>';
 	let days = '';
 	for (let i = 0; i < 10; i++) {
-		let dayName = data.dates[i].toLocaleDateString('fr-FR', {weekday: 'short'});
-		let dayNumber = data.dates[i].getDate();
+		let dayName = data.days[i].name + '.';
+		let dayNumber = data.days[i].number;
 		days += day.replace(/%i%/g, '' + (i + 1)).replace('%label%', dayName + ' ' + dayNumber).replace(/%daynumber%/g, '' + dayNumber);
 	}
 	html = html.replace('%days%', days);
