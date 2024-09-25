@@ -44,7 +44,7 @@ function analyzeParisfr(html) {
 	
 	const $ = cheerio.load(html);
 	
-	let table = $('.equipments-timetables-desktop');
+	let table = $('.places--timetables-desktop');
 	
 	let tableheaders = $(table).find('thead th');
 
