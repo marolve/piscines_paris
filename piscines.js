@@ -59,7 +59,7 @@ var piscines = [
 { name: 'Piscine d\'Auteuil', x: 48.85693, y: 2.26056 },
 { name: 'Piscine Henry de Montherlant', x: 48.86738, y: 2.27154 },
 { name: 'Piscine Bernard Lafay', x: 48.89437, y: 2.31875 },
-{ name: 'Piscine Champerret', x: 48.88863, y: 2.29567 },
+{ name: 'Piscine Marjorie Gestring (Ex : Piscine Champerret)', x: 48.88863, y: 2.29567 },
 { name: 'Piscine Bertrand Dauvin', x: 48.89961, y: 2.34241 },
 { name: 'Piscine Hébert', x: 48.8940930, y: 2.3635225 },
 { name: 'Piscine des Amiraux', x: 48.89433, y: 2.35098 },
