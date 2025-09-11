@@ -64,6 +64,7 @@ var piscines = [
 { name: 'Piscine Hébert', x: 48.8940930, y: 2.3635225 },
 { name: 'Piscine des Amiraux', x: 48.89433, y: 2.35098 },
 { name: 'Piscine Georges Hermant', x: 48.88255, y: 2.38980 },
+{ name: 'Piscine Solita Salgado', x: 48.895947, y: 2.335289 },
 { name: 'Piscine Mathis', x: 48.8907179, y: 2.3749478 },
 { name: 'Piscine Rouvet', x: 48.8930004, y: 2.3849571 },
 { name: 'Piscine Edouard Pailleron', x: 48.88081, y: 2.37797 },
