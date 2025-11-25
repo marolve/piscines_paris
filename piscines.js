@@ -56,7 +56,7 @@ var piscines = [
 { name: 'Piscine Keller', x: 48.84744, y: 2.28223 },
 { name: 'Piscine Emile Anthoine', x: 48.8557538, y: 2.2906075 },
 { name: 'Piscine Armand Massard', x:  48.8432854, y: 2.3234991 },
-{ name: 'Piscine d\' Auteuil', x: 48.85693, y: 2.26056 },
+{ name: 'Piscine d\'Auteuil', x: 48.85693, y: 2.26056 },
 { name: 'Piscine Henry de Montherlant', x: 48.86738, y: 2.27154 },
 { name: 'Piscine Bernard Lafay', x: 48.89437, y: 2.31875 },
 { name: 'Piscine Marjorie Gestring (Ex : Piscine Champerret)', x: 48.88863, y: 2.29567 },
