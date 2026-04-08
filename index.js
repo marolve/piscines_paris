@@ -209,7 +209,9 @@ function fillHtml(html, data) {
 
 // main
 var server = http.createServer((req, res) => {
-	if (req.url == '/') {
+	const tempURL = new URL(req.url, `http://${req.headers.host}`);
+	const pathname = tempURL.pathname;
+	if (pathname == '/') {
 			
 		res.writeHead(200, { 'Content-Type': 'text/html' }); 
 
@@ -232,7 +234,7 @@ var server = http.createServer((req, res) => {
 		});
 	}
 	else {
-		let filePath = '.' + req.url;
+		let filePath = '.' + pathname;
 		var extname = path.extname(filePath);
 		var contentType = 'text/html';
 		switch (extname) {
