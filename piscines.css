@@ -31,6 +31,10 @@ img.openlevel2 {
 	filter: grayscale(0.5) brightness(1.3) hue-rotate(180deg);
 }
 
+img.circle { 
+	filter: opacity(0.4);
+}
+
 .tab-content {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;

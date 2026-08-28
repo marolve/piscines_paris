@@ -6,6 +6,8 @@ $(window).on( 'load', function() {
 	
 	initMap();
 	
+	addCircles();
+	
 	$('.nav-maplist').click(function() {
 		event.preventDefault();
 		updateNav();
@@ -103,6 +105,25 @@ function removeAllMarkers() {
 		map.removeLayer(marker);
 	});
 	markers = [];
+}
+
+function addCircle(lat, lon) {
+	var marker = L.marker([lat, lon], {
+				icon: circleIcon
+		}).addTo(map);
+	marker._icon.classList.add("circle");
+}
+
+function addCircles() {
+	circleIcon = L.icon({
+			iconUrl: 'circle16.png',
+			iconSize: [16, 16],
+			iconAnchor: [8, 8],
+	});
+	
+	piscines.forEach( piscine => {
+		addCircle( piscine.x, piscine.y);
+	});
 }
 
 function addMarker(lat, lon, text, openLevel) {

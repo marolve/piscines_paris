@@ -247,6 +247,9 @@ var server = http.createServer((req, res) => {
 			case '.json':
 				contentType = 'application/json';
 				break;
+			case '.svg':
+				contentType = 'image/svg+xml';
+				break;
 		}
 
 		fs.readFile(filePath, function(error, content) {
