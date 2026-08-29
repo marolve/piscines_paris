@@ -1,12 +1,10 @@
 
 var map;
-var markers = [];
+var circleIcon;
 
 $(window).on( 'load', function() {
 	
 	initMap();
-	
-	addCircles();
 	
 	$('.nav-maplist').click(function() {
 		event.preventDefault();
@@ -84,6 +82,12 @@ function initMap() {
 			maxZoom: 19,
 			attribution: '© OpenStreetMap'
 	}).addTo(map);
+
+	circleIcon = L.icon({
+			iconUrl: 'circle16.png',
+			iconSize: [16, 16],
+			iconAnchor: [8, 8],
+	});
 	
 /*	L.control.locate({
 		drawCircle: true
@@ -101,36 +105,42 @@ function findPiscine(name) {
 }
 
 function removeAllMarkers() {
-	markers.forEach(marker => {
-		map.removeLayer(marker);
-	});
-	markers = [];
-}
-
-function addCircle(lat, lon) {
-	var marker = L.marker([lat, lon], {
-				icon: circleIcon
-		}).addTo(map);
-	marker._icon.classList.add("circle");
-}
-
-function addCircles() {
-	circleIcon = L.icon({
-			iconUrl: 'circle16.png',
-			iconSize: [16, 16],
-			iconAnchor: [8, 8],
-	});
-	
 	piscines.forEach( piscine => {
-		addCircle( piscine.x, piscine.y);
+		if (piscine.marker) {
+			map.removeLayer(piscine.marker);
+			piscine.marker = null;
+		}
 	});
 }
 
-function addMarker(lat, lon, text, openLevel) {
-	marker = L.marker([lat, lon]).addTo(map);
+function addMarker(piscine, isCircle, textInformation, openLevel) {
+	if (piscine.marker) {
+		map.removeLayer(marker);
+		piscine.marker = null;
+	}
+	var lat = piscine.x;
+	var lon = piscine.y;
+	var text = '';
+	if (piscine.link) {
+		text += '<h6><a href="' + piscine.link + '">' + piscine.name + '</a></h6>';
+	} else {
+		text += piscine.name;
+	}
+	if (textInformation) {
+		text += '<br/>' + textInformation;
+	}
+	var marker;
+	if (!isCircle) {
+		marker = L.marker([lat, lon]).addTo(map);
+		marker._icon.classList.add("openlevel" + openLevel);
+	} else {
+		marker = L.marker([lat, lon], { 
+				icon: circleIcon
+			}).addTo(map);
+		marker._icon.classList.add("circle");
+	}
 	marker.bindPopup(text);
-	marker._icon.classList.add("openlevel" + openLevel);
-	markers.push(marker);
+	piscine.marker = marker;
 	return marker;
 }
 
@@ -213,6 +223,11 @@ function updateList() {
 		let scheduleTextComplete = $(this).attr('data-schedule-text' + dayid);
 		let scheduleText = '';
 		
+		let piscine = findPiscine(piscineName);
+		if (piscine) {
+			piscine.link = piscineLink;
+		}
+		
 		// schedule datas "420-510;690-810"
 		let timestart = hour * 60;
 		let timeend = timestart + 59;
@@ -275,11 +290,15 @@ function updateList() {
 			$(this).show();
 		}
 		if (openLevel >= 0) {
-			let piscine = findPiscine(piscineName);
 			if (piscine != null) {
-				let piscineText = '<h6><a href="' + piscineLink + '">' + piscine.name + '</a></h6><br/>' + scheduleTextComplete;
-				addMarker(piscine.x, piscine.y, piscineText, openLevel);
+				addMarker(piscine, false, scheduleTextComplete, openLevel);
 			}
+		}
+	});
+	
+	piscines.forEach( piscine => {
+		if (!piscine.marker) {
+			addMarker(piscine, true, 'Fermée');
 		}
 	});
 }
