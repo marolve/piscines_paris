@@ -197,7 +197,7 @@ const MonthLabels = [ "janvier", "février", "mars", "avril", "mai", "juin", "ju
 function getLabelDate(label, monthNumber) {
 	// lun. 12 -> lundi 12
 	label = label.replace('lun.', 'lundi').replace('mar.', 'mardi').replace('mer.', 'mercredi').replace('jeu.', 'jeudi').replace('ven.', 'vendredi').replace('sam.', 'samedi').replace('dim.', 'dimanche');
-	label += ' ' + MonthLabels[monthNumber];
+	label += ' ' + MonthLabels[monthNumber - 1];
 	return label;
 }
 
