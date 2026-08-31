@@ -59,8 +59,9 @@ function analyzeParisfr(html) {
 				if (posDot == 3) {
 					let dayName = text.substring(0, posDot);
 					let day = parseInt(text.substring(pos - 2, pos), 10);
-					if (day > 0 && day < 32) {
-						days.push( { 'number' : day, 'name' : dayName } );
+					let month = parseInt(text.substring(pos + 1, pos + 3), 10);
+					if (day > 0 && day < 32 && month > 0 && month < 13) {
+						days.push( { 'number' : day, 'monthnumber' : month, 'name' : dayName } );
 					} else {
 						console.log('Error :Invalid header date value while parsing html : ' + text);
 						return null;
@@ -156,13 +157,14 @@ function fillHtml(html, data) {
 	html = html.replace('%datelabel%', new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'}));
 	
 	if (data.days.length < 6) return '';
-	let day = '\n			<input type="radio" class="btn-check btnradioday btnradiodaynumber%daynumber%" name="btnradioday" id="btnradioday%i%" autocomplete="off" data-day-number="%daynumber%">';
+	let day = '\n			<input type="radio" class="btn-check btnradioday btnradiodaynumber%daynumber%" name="btnradioday" id="btnradioday%i%" autocomplete="off" data-day-number="%daynumber%" data-month-number="%monthnumber%">';
 	day += '\n			<label class="btn btn-outline-primary" for="btnradioday%i%">%label%</label>';
 	let days = '';
 	for (let i = 0; i < 10; i++) {
 		let dayName = data.days[i].name + '.';
 		let dayNumber = data.days[i].number;
-		days += day.replace(/%i%/g, '' + (i + 1)).replace('%label%', dayName + ' ' + dayNumber).replace(/%daynumber%/g, '' + dayNumber);
+		let monthNumber = data.days[i].monthnumber;
+		days += day.replace(/%i%/g, '' + (i + 1)).replace('%label%', dayName + ' ' + dayNumber).replace(/%daynumber%/g, '' + dayNumber).replace(/%monthnumber%/g, '' + monthNumber);
 	}
 	html = html.replace('%days%', days);
 	

@@ -127,7 +127,7 @@ function addMarker(piscine, isCircle, textInformation, openLevel) {
 		text += piscine.name;
 	}
 	if (textInformation) {
-		text += '<br/>' + textInformation;
+		text += textInformation;
 	}
 	var marker;
 	if (!isCircle) {
@@ -192,6 +192,93 @@ function updateNav() {
 	}
 }
 
+const MonthLabels = [ "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre" ];
+
+function getLabelDate(label, monthNumber) {
+	// lun. 12 -> lundi 12
+	label = label.replace('lun.', 'lundi').replace('mar.', 'mardi').replace('mer.', 'mercredi').replace('jeu.', 'jeudi').replace('ven.', 'vendredi').replace('sam.', 'samedi').replace('dim.', 'dimanche');
+	label += ' ' + MonthLabels[monthNumber];
+	return label;
+}
+
+const TimeStatus = {
+	TS_BEFORE: 'TS_BEFORE',						// Avant
+	TS_WITHIN: 'TS_WITHIN',						// Pendant
+	TS_OVERLAPPING: 'TS_OVERLAPPING'	// Entre deux horaires
+};
+
+function analyseSchedule(daystart, scheduleDatas, hour) {
+	// scheduleData "420-510;690-810"
+	let timeStatus;
+	let text = '';
+	for (i = 0; i < scheduleDatas.length; i++) {
+		scheduleData = scheduleDatas[i];
+		let timestart = (i == 0) ? hour * 60 : 0;
+		let timeend = timestart + 59;
+		let start = 0;
+		let addTextAllDay = false;
+		while (start != -1) {
+			let schedule = '';
+			let sep = scheduleData.indexOf(';', start);
+			if (sep == -1) {
+				schedule = scheduleData.substring(start);
+				start = -1;
+			}
+			else {
+				schedule = scheduleData.substring(start, sep);
+				start = sep + 1;
+			}
+			if (schedule.length > 0) {
+				let sep = schedule.indexOf('-');
+				if (sep != -1) {
+					let low = parseInt(schedule.substring(0, sep));
+					let high = parseInt(schedule.substring(sep + 1));
+					let timestartok = (timestart >= low && timestart < high);
+					let timeendok = (timeend >= low && timeend <= high);
+					let addTextOnce = false;
+					if (!timeStatus) {
+						if (timestart < low) {
+							timeStatus = TimeStatus.TS_BEFORE;
+							if (i > 0) {
+								if (text.length > 0)
+									text += '<br/>';
+								let btnradioday = 'btnradioday' + (daystart + i);
+								text += 'Prochaine ouverture : ' + getLabelDate( $('label[for="' + btnradioday + '"]').text(), $('#' + btnradioday).attr('data-month-number'));
+								addTextOnce = true;
+							} else {
+								addTextAllDay = true;
+							}
+						}
+						if (i == 0) {
+							if (timestartok && timeendok) {
+								timeStatus = TimeStatus.TS_WITHIN;
+								addTextAllDay = true;
+							}
+							if ((timestartok && !timeendok) || (!timestartok && timeendok)) {
+								timeStatus = TimeStatus.TS_OVERLAPPING;
+								addTextAllDay = true;
+							}
+						}
+					}
+					if (addTextOnce || addTextAllDay) {
+						if (text.length > 0)
+							text += '<br/>';
+						let lowhour = (Math.floor(low/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+						let lowminute = (low%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+						let highhour = (Math.floor(high/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+						let highminute = (high%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+						text += lowhour + ':' + lowminute + ' à ' + highhour + ':' + highminute;
+					}
+				}
+			}
+		}
+	}
+	return {
+		timeStatus: timeStatus,
+		text: text
+	};
+}
+
 function updateList() {
 	
 	removeAllMarkers();
@@ -222,63 +309,31 @@ function updateList() {
 		
 		let piscineName = $(this).attr('data-name');
 		let piscineLink = $(this).attr('data-link');
-		let scheduleData = $(this).attr('data-schedule-data' + dayid);
-		let scheduleTextComplete = $(this).attr('data-schedule-text' + dayid);
-		let scheduleText = '';
+		let scheduleDatas = [];
+		for (daytemp = Number(dayid); daytemp <= 10; daytemp++) {
+			scheduleDatas.push( $(this).attr('data-schedule-data' + daytemp));
+		}
 		
 		let piscine = findPiscine(piscineName);
 		if (piscine) {
 			piscine.link = piscineLink;
 		}
+
+		let scheduleInfo = analyseSchedule(Number(dayid), scheduleDatas, hour);
 		
-		// schedule datas "420-510;690-810"
-		let timestart = hour * 60;
-		let timeend = timestart + 59;
-		let start = 0;
 		let openLevel = -1;
-		while (start != -1) {
-			let schedule = '';
-			let sep = scheduleData.indexOf(';', start);
-			if (sep == -1) {
-				schedule = scheduleData.substring(start);
-				start = -1;
-			}
-			else {
-				schedule = scheduleData.substring(start, sep);
-				start = sep + 1;
-			}
-			if (schedule.length > 0) {
-				if (openLevel == -1)
-					openLevel = 0;
-				let sep = schedule.indexOf('-');
-				if (sep != -1) {
-					let low = parseInt(schedule.substring(0, sep));
-					let high = parseInt(schedule.substring(sep + 1));
-					let timestartok = (timestart >= low && timestart < high);
-					let timeendok = (timeend >= low && timeend <= high);
-					let addText = false;
-					if (timestartok && timeendok) {
-						openLevel = 1;
-						addText = true;
-					}
-					if (openLevel == 0) {
-						if ((timestartok && !timeendok) || (!timestartok && timeendok)) {
-							openLevel = 2;
-							addText = true;
-						}
-					}
-					if (addText) {
-						if (scheduleText.length > 0)
-							scheduleText += '<br/>';
-						let lowhour = (Math.floor(low/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						let lowminute = (low%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						let highhour = (Math.floor(high/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						let highminute = (high%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						scheduleText += lowhour + ':' + lowminute + ' à ' + highhour + ':' + highminute;
-					}
-				}
-			}
+		if (scheduleInfo.timeStatus == TimeStatus.TS_WITHIN)
+			openLevel = 1;
+		if (scheduleInfo.timeStatus == TimeStatus.TS_OVERLAPPING)
+			openLevel = 2;
+		if (scheduleInfo.timeStatus == TimeStatus.TS_BEFORE)
+			openLevel = 0;
+		let scheduleText = scheduleInfo.text;
+		let scheduleTextPopup = '';
+		if (scheduleText.length > 0) {
+			scheduleTextPopup += scheduleText;
 		}
+		
 		$(this).find('.schedulecell').html(scheduleText);
 		$(this).removeClass('table-info');
 		if (openLevel == 2)
@@ -287,6 +342,7 @@ function updateList() {
 			$(this).css('font-style', 'normal');
 			$(this).addClass('table-info');
 		}
+		
 		if (openLevel <= 0) {
 			$(this).hide();
 		} else {
@@ -294,7 +350,7 @@ function updateList() {
 		}
 		if (openLevel >= 0) {
 			if (piscine != null) {
-				addMarker(piscine, false, scheduleTextComplete, openLevel);
+				addMarker(piscine, false, scheduleTextPopup, openLevel);
 			}
 		}
 	});
