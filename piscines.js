@@ -248,7 +248,7 @@ function analyseSchedule(daystart, scheduleDatas, hour) {
 							addText = true;
 						}
 						if (lastSchedule) {
-							if (timestart > high) {
+							if (timestart >= high) {
 								timeStatus = TimeStatus.TS_AFTER;
 								addText = true;
 							}
