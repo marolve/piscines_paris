@@ -204,7 +204,9 @@ function getLabelDate(label, monthNumber) {
 const TimeStatus = {
 	TS_BEFORE: 'TS_BEFORE',						// Avant
 	TS_WITHIN: 'TS_WITHIN',						// Pendant
-	TS_OVERLAPPING: 'TS_OVERLAPPING'	// Entre deux horaires
+	TS_OVERLAPPING: 'TS_OVERLAPPING',	// Entre deux horaires
+	TS_AFTER: 'TS_AFTER',							// Après
+	TS_ANOTHERDAY: 'TS_ANOTHERDAY'		// Un autre jour
 };
 
 function analyseSchedule(daystart, scheduleDatas, hour) {
@@ -216,13 +218,18 @@ function analyseSchedule(daystart, scheduleDatas, hour) {
 		let timestart = (i == 0) ? hour * 60 : 0;
 		let timeend = timestart + 59;
 		let start = 0;
-		let addTextAllDay = false;
+		let addText = false;
+		let lastSchedule = false;
+		let textAllDay = '';
+		let btnradiodayId = 'btnradioday' + (daystart + i);
+		let textDay = getLabelDate( $('label[for="' + btnradiodayId + '"]').text(), $('#' + btnradiodayId).attr('data-month-number'));
 		while (start != -1) {
 			let schedule = '';
 			let sep = scheduleData.indexOf(';', start);
 			if (sep == -1) {
 				schedule = scheduleData.substring(start);
 				start = -1;
+				lastSchedule = true;
 			}
 			else {
 				schedule = scheduleData.substring(start, sep);
@@ -235,39 +242,47 @@ function analyseSchedule(daystart, scheduleDatas, hour) {
 					let high = parseInt(schedule.substring(sep + 1));
 					let timestartok = (timestart >= low && timestart < high);
 					let timeendok = (timeend >= low && timeend <= high);
-					let addTextOnce = false;
 					if (!timeStatus) {
 						if (timestart < low) {
 							timeStatus = TimeStatus.TS_BEFORE;
-							if (i > 0) {
-								if (text.length > 0)
-									text += '<br/>';
-								let btnradioday = 'btnradioday' + (daystart + i);
-								text += 'Prochaine ouverture : ' + getLabelDate( $('label[for="' + btnradioday + '"]').text(), $('#' + btnradioday).attr('data-month-number'));
-								addTextOnce = true;
-							} else {
-								addTextAllDay = true;
+							addText = true;
+						}
+						if (lastSchedule) {
+							if (timestart > high) {
+								timeStatus = TimeStatus.TS_AFTER;
+								addText = true;
 							}
 						}
 						if (i == 0) {
 							if (timestartok && timeendok) {
 								timeStatus = TimeStatus.TS_WITHIN;
-								addTextAllDay = true;
+								addText = true;
 							}
 							if ((timestartok && !timeendok) || (!timestartok && timeendok)) {
 								timeStatus = TimeStatus.TS_OVERLAPPING;
-								addTextAllDay = true;
+								addText = true;
 							}
 						}
 					}
-					if (addTextOnce || addTextAllDay) {
+					let lowhour = (Math.floor(low/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+					let lowminute = (low%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+					let highhour = (Math.floor(high/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+					let highminute = (high%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
+					let textOnce = lowhour + ':' + lowminute + ' à ' + highhour + ':' + highminute;
+					if (textAllDay.length > 0)
+						textAllDay += '<br/>';
+					textAllDay += textOnce;
+					if (addText && lastSchedule) {
 						if (text.length > 0)
 							text += '<br/>';
-						let lowhour = (Math.floor(low/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						let lowminute = (low%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						let highhour = (Math.floor(high/60)).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						let highminute = (high%60).toLocaleString('fr-FR', {minimumIntegerDigits: 2});
-						text += lowhour + ':' + lowminute + ' à ' + highhour + ':' + highminute;
+						if (i > 0) {
+							timeStatus = TimeStatus.TS_ANOTHERDAY;
+							text += 'Prochaine ouverture : ';
+						}
+						text += textDay;
+						if (text.length > 0)
+							text += '<br/>';
+						text += textAllDay;
 					}
 				}
 			}
@@ -328,6 +343,10 @@ function updateList() {
 			openLevel = 2;
 		if (scheduleInfo.timeStatus == TimeStatus.TS_BEFORE)
 			openLevel = 0;
+		if (scheduleInfo.timeStatus == TimeStatus.TS_AFTER)
+			openLevel = 0;
+		if (scheduleInfo.timeStatus == TimeStatus.TS_ANOTHERDAY)
+			openLevel = 3;
 		let scheduleText = scheduleInfo.text;
 		let scheduleTextPopup = '';
 		if (scheduleText.length > 0) {
